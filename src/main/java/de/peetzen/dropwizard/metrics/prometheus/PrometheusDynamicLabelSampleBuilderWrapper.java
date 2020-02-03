@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class PrometheusDynamicLabelSampleBuilderWrapper implements SampleBuilder {
 
     // Documentation on allowed patterns: https://prometheus.io/docs/concepts/data_model/#metric-names-and-labels
-    private static final Pattern PATTERN_METRIC_NAME = Pattern.compile("([\\w\\.-]+)\\[([\\w\\W]+)\\]");
+    private static final Pattern PATTERN_METRIC_NAME = Pattern.compile("([\\w\\.-]+)\\[([\\w\\W]*)\\]");
     private static final Pattern PATTERN_LABEL = Pattern.compile("([a-zA-Z_][a-zA-Z0-9_]*):([^,]+)");
 
     private final SampleBuilder delegate;
