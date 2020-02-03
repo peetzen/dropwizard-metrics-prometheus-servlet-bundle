@@ -1,0 +1,5 @@
+Configurable Prometheus Servlet Bundle for Dropwizard
+Copyright 2020 Markus Peetzen
+
+This product includes software developed as part of the
+Prometheus instrumentation library for JVM applications (https://github.com/prometheus/client_java/).

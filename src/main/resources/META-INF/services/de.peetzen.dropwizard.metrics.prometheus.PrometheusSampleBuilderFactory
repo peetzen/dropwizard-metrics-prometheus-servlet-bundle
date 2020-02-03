@@ -1,0 +1,3 @@
+de.peetzen.dropwizard.metrics.prometheus.PrometheusDefaultSampleBuilderFactory
+de.peetzen.dropwizard.metrics.prometheus.PrometheusCustomMappingSampleBuilderFactory
+de.peetzen.dropwizard.metrics.prometheus.PrometheusSimpleMappingSampleBuilderFactory
