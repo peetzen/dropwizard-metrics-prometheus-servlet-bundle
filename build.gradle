@@ -83,8 +83,8 @@ publishing {
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
 
             credentials {
-                username sonatypeOssUsername
-                password sonatypeOssPassword
+                username project.findProperty('sonatypeOssUsername') ?: System.getenv('SONATYPE_OSS_USERNAME')
+                password project.findProperty('sonatypeOssPassword') ?: System.getenv('SONATYPE_OSS_PASSWORD')
             }
         }
     }
