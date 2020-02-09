@@ -1,6 +1,8 @@
 plugins {
     id 'java-library'
     id 'groovy'
+    id 'maven-publish'
+    id 'signing'
 }
 
 repositories {
@@ -16,9 +18,88 @@ dependencies {
     implementation group: 'io.prometheus', name: 'simpleclient_servlet', version: '0.8.1'
 
     // Spock for testing
-    testCompile group: 'org.spockframework', name: 'spock-core', version: '2.0-M1-groovy-2.5'
+    testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.0-M1-groovy-2.5'
 }
+
+group = 'de.peetzen.dropwizard'
 
 test {
     useJUnitPlatform()
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'dropwizard-metrics-prometheus-servlet-bundle'
+            from components.java
+            pom {
+                name = 'Configurable Prometheus Servlet Bundle for Dropwizard'
+                description = 'This configurable Dropwizard bundle makes it easy to expose metrics from a Dropwizard' +
+                        ' application in a Prometheus compatible format with custom names and labels.'
+                url = 'https://github.com/peetzen/dropwizard-metrics-prometheus-servlet-bundle'
+                licenses {
+                    license {
+                        name = "Apache License, Version 2.0"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0"
+                        distribution = "repo"
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'peetzen'
+                        name = 'Markus Peetzen'
+                        email = 'dev@peetzen.de'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/peetzen/dropwizard-metrics-prometheus-servlet-bundle'
+                    connection = 'scm:git:git://github.com/peetzen/dropwizard-metrics-prometheus-servlet-bundle.git'
+                    developerConnection = 'scm:git:git://github.com/peetzen/dropwizard-metrics-prometheus-servlet-bundle.git'
+                }
+                issueManagement {
+                    system = "GitHub"
+                    url = 'https://github.com/peetzen/dropwizard-metrics-prometheus-servlet-bundle/issues'
+                }
+            }
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+            credentials {
+                username sonatypeOssUsername
+                password sonatypeOssPassword
+            }
+        }
+    }
+}
+
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
+    sign publishing.publications.mavenJava
+}
+tasks.withType(Sign) {
+    onlyIf { isReleaseVersion }
+}
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
 }
