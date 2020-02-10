@@ -1,6 +1,7 @@
 package de.peetzen.dropwizard.metrics.prometheus;
 
 import io.dropwizard.ConfiguredBundle;
+import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.exporter.MetricsServlet;
@@ -35,5 +36,10 @@ public class PrometheusMetricsServletBundle implements ConfiguredBundle<Promethe
         env.admin() // use admin port
             .addServlet(servletName, servlet)
             .addMapping(config.getPath());
+    }
+
+    @Override
+    public void initialize(Bootstrap<?> bootstrap) {
+        // do nothing. Definition required for Dropwizard 1.x
     }
 }
