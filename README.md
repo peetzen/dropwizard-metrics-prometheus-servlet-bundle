@@ -1,9 +1,13 @@
 # Configurable Prometheus Servlet Bundle for Dropwizard
+[![CircleCI](https://img.shields.io/circleci/build/gh/peetzen/dropwizard-metrics-prometheus-servlet-bundle)](https://circleci.com/gh/peetzen/dropwizard-metrics-prometheus-servlet-bundle/)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.peetzen.dropwizard/dropwizard-metrics-prometheus-servlet-bundle/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.peetzen.dropwizard/dropwizard-metrics-prometheus-servlet-bundle)
+[![License](https://img.shields.io/github/license/peetzen/dropwizard-metrics-prometheus-servlet-bundle)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
 Adds support for exposing Dropwizard metrics as Prometheus compatible metrics through a dedicated servlet.
 
 Using your applications configuration file it is easy to customize metrics and map metric names to a more user friendly version including support for labels.
 
-## Information
+## Documentation
 This bundle makes it easy to expose metrics from a Dropwizard application in a Prometheus compatible format. Through the applications configuration file the name of the exposed metrics can be changed and labels added for each metric independently.
 
 Internally the official [Prometheus JVM Client](https://github.com/prometheus/client_java) implementation is being used to map the Dropwizard metrics as well as to expose the metrics through a dedicated servlet.
@@ -13,8 +17,27 @@ Information regarding the sanitizing of dropwizard metric names can be found at 
 
 More information regarding the [Prometheus Data Model](https://prometheus.io/docs/concepts/data_model/) in general.
 
-## Getting Started
-Dropwizard makes it easy to extend its functionality with litle work for the user.
+## Getting started
+The artifacts including source and binaries are available on the central Maven repositories.
+
+For maven: 
+```xml
+<dependency>
+  <groupId>de.peetzen.dropwizard</groupId>
+  <artifactId>dropwizard-metrics-prometheus-servlet-bundle</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
+For gradle:
+```yaml
+implementation group: 'de.peetzen.dropwizard', name: 'dropwizard-metrics-prometheus-servlet-bundle', version: '1.0.0'
+```
+
+Fully compatible with Dropwizard version `v1.x` as well as `v2.x`.
+
+### Required Changes
+Dropwizard makes it easy to extend its functionality with little work for the user.
 
 Your main configuration class needs to implement the _PrometheusMetricsServletBundle_ interface:
 ```java
@@ -49,7 +72,7 @@ public class MyApplication extends Application<MyApplicationConfiguration> {
 ```
 
 Add a section to your applications configuration file:
-```yml
+```yaml
 prometheusMetrics:
   sampleBuilder:
     type: default
@@ -79,7 +102,7 @@ Enable or disable the automatic decoding of dynamic labels from the dropwizard m
 Defines the explicit mapping for dropwizard metrics to prometheus metrics. The format depends on the _sampleBuilder.type_.
 
 The type _simple-mapping_ uses a _key: value_ syntax to define the _match_ part and the name that should be used instead.
-```yml
+```yaml
   type: simple-mapping
   mappings:  
     my.metric.something: new.name
@@ -91,7 +114,7 @@ The type _custom-mapping_ uses * as a wildcard in the dropwizard metric name and
 Mappings can be defined in two formats, a _key: value_ syntax to define the _match_ part and the name that should be used instead.
 The other option is to provide an object with a _name_ and an optional list of labels, each label expressed as a single string using the format _label:value_.
 
-```yml
+```yaml
   type: custom-mapping
   mappings:  
     my.metric.something.*: new.name.$0
@@ -105,10 +128,10 @@ The other option is to provide an object with a _name_ and an optional list of l
        - my_label:$0
 ```
 
-## Dropwizard Example Configuration
+## Example Configuration for Dropwizard's built-in metrics
 Dropwizard comes with several instrumented classes by default and those metrics can easily be mapped to a more user friendly format.
 
-```yml
+```yaml
 prometheusMetrics:
   sampleBuilder:
     type: custom-mapping
