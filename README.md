@@ -128,9 +128,10 @@ The other option is to provide an object with a _name_ and an optional list of l
        - my_label:$0
 ```
 
-## Example Configuration for Dropwizard's built-in metrics
+## Template for Dropwizard's built-in metrics
 Dropwizard comes with several instrumented classes by default and those metrics can easily be mapped to a more user friendly format.
 
+Here is a template for some of the core metrics:
 ```yaml
 prometheusMetrics:
   sampleBuilder:
@@ -156,6 +157,11 @@ prometheusMetrics:
         name: logger
         labels:
           - level:$0
+      org.apache.http.client.HttpClient.*.*-requests:
+        name: client.http.requests
+        labels:
+          - name:$0
+          - method:$1
       org.apache.http.conn.HttpClientConnectionManager.*.*-connections:
         name: client.http.connections.$1
         labels:
