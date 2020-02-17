@@ -1,7 +1,12 @@
 # Configurable Prometheus Servlet Bundle for Dropwizard
-[![CircleCI](https://img.shields.io/circleci/build/gh/peetzen/dropwizard-metrics-prometheus-servlet-bundle)](https://circleci.com/gh/peetzen/dropwizard-metrics-prometheus-servlet-bundle/)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.peetzen.dropwizard/dropwizard-metrics-prometheus-servlet-bundle/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.peetzen.dropwizard/dropwizard-metrics-prometheus-servlet-bundle)
+[![CircleCI](https://img.shields.io/circleci/build/gh/peetzen/dropwizard-metrics-prometheus-servlet-bundle)](https://circleci.com/gh/peetzen/dropwizard-metrics-prometheus-servlet-bundle)
+[![Maven Central](https://img.shields.io/maven-central/v/de.peetzen.dropwizard/dropwizard-metrics-prometheus-servlet-bundle)](https://search.maven.org/artifact/de.peetzen.dropwizard/dropwizard-metrics-prometheus-servlet-bundle)
 [![License](https://img.shields.io/github/license/peetzen/dropwizard-metrics-prometheus-servlet-bundle)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
+[![Dropwizard](https://img.shields.io/badge/dropwizard-v1.x-green)](https://github.com/dropwizard/dropwizard)
+[![Dropwizard](https://img.shields.io/badge/dropwizard-v1.3.x-green)](https://github.com/dropwizard/dropwizard)
+[![Dropwizard](https://img.shields.io/badge/dropwizard-v2.x-green)](https://github.com/dropwizard/dropwizard)
+
 
 Adds support for exposing Dropwizard metrics as Prometheus compatible metrics through a dedicated servlet.
 
@@ -41,16 +46,11 @@ Dropwizard makes it easy to extend its functionality with little work for the us
 
 Your main configuration class needs to implement the _PrometheusMetricsServletBundle_ interface:
 ```java
-public class MyApplicationConfiguration extends Configuration implements PrometheusMetricsServletBundle {
-  @Valid
-  @NotNull
-  @JsonProperty
-  private PrometheusMetricsServletConfiguration prometheusMetrics;
+public class MyApplicationConfiguration extends Configuration implements PrometheusMetricsServletBundleConfiguration {
+ 
+    // a default implementation for getPrometheusMetricsServletConfiguration() is provided
   
-  @Override
-  public PrometheusMetricsServletConfiguration getPrometheusMetricsServletConfiguration() {
-    return prometheusMetrics;
-  }
+    ...
 }
 ```
 
@@ -62,6 +62,8 @@ public class MyApplication extends Application<MyApplicationConfiguration> {
     public void initialize(Bootstrap<MyApplicationConfiguration> bootstrap) {
         // Add bundle to serv metrics in prometheus compatible format at /prometheusMetrics
         bootstrap.addBundle(new PrometheusMetricsServletBundle());
+
+        super.initialize(bootstrap);
     }
 
     @Override
@@ -71,29 +73,48 @@ public class MyApplication extends Application<MyApplicationConfiguration> {
 }
 ```
 
-Add a section to your applications configuration file:
-```yaml
-prometheusMetrics:
-  sampleBuilder:
-    type: default
-```
-The key _prometheusMetrics_ depends on the _JsonProperty_ name in your _MyApplicationConfiguration_ and can be changed.
-
 ## Dynamic Labels
 By default dynamic labels are being extracted from the dropwizard metric name. Labels can be encoded as _my.metric.something\[label1:value1,label2:value2]_ and are automatically decoded and added to the prometheus metric. The prometheus metric name becomes _my.metric.something_.
 
 The extraction of dynamic labels can be disabled through configuration options.
 
-## Configuration Options
+## Configuration
+To support configurations the main configuration class needs to implement the _PrometheusMetricsServletBundle_ interface and the _getPrometheusMetricsServletConfiguration()_ 
+must be overridden in a way that the actual configuration is loaded from the application configuration file:
+```java
+public class MyApplicationConfiguration extends Configuration implements PrometheusMetricsServletBundleConfiguration {
+ 
+    @Valid
+    @NotNull
+    @JsonProperty
+    private PrometheusMetricsServletConfiguration prometheusMetrics;
+  
+    @Override
+    public PrometheusMetricsServletConfiguration getPrometheusMetricsServletConfiguration() {
+        return prometheusMetrics;
+    }
+}
+```
+
+Add a section to your applications configuration file to adjust the behaviour:
+```yaml
+prometheusMetrics:
+  path: /myMetrics
+  sampleBuilder:
+    type: default
+```
+The key _prometheusMetrics_ depends on the _JsonProperty_ name in your _MyApplicationConfiguration_ and can be changed.
+
+### Configuration Options
 
 #### path
 The URI path used to serv the prometheus metrics, default is _/prometheusMetrics_
 
 #### sampleBuilder.type
 Currently there are three support _sampleBuilder.type_'s:
-* default: no explicit mapping
-* simple-mapping: replaces the name of the metric, if it starts with the given string
-* custom-mapping: use * as a wildcard to match and keywords $0, $1, .. to reference the matched value. The refernces can be used within the metric name as well as to add dynamic label values.
+* **default**: no explicit mapping
+* **simple-mapping**: replaces the name of the metric, if it starts with the given string
+* **custom-mapping**: use * as a wildcard to match and keywords $0, $1, .. to reference the matched value. The refernces can be used within the metric name as well as to add dynamic label values.
 
 #### sampleBuilder.extractDynamicLabels
 Enable or disable the automatic decoding of dynamic labels from the dropwizard metric name.
