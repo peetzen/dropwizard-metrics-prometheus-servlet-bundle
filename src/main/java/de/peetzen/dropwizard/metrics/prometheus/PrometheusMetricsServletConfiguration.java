@@ -17,15 +17,21 @@ public class PrometheusMetricsServletConfiguration {
     @Valid
     @NotNull
     @JsonProperty
-    private PrometheusSampleBuilderFactory sampleBuilder;
+    private PrometheusSampleBuilderFactory sampleBuilder = new PrometheusDefaultSampleBuilderFactory();
+
+    public CollectorRegistry createCollectorRegistry(MetricRegistry registry) {
+        // create CollectorRegistry instance instead of reusing CollectorRegistry.defaultRegistry to make sure we
+        // are not conflicting with other use cases
+        CollectorRegistry collectorRegistry = new CollectorRegistry(true);
+        collectorRegistry.register(new DropwizardExports(registry, sampleBuilder.build()));
+        return collectorRegistry;
+    }
 
     public String getPath() {
         return path;
     }
 
-    public CollectorRegistry createCollectorRegistry(MetricRegistry registry) {
-        CollectorRegistry collectorRegistry = new CollectorRegistry(false); // same as defaut but has its own instance
-        collectorRegistry.register(new DropwizardExports(registry, sampleBuilder.build()));
-        return collectorRegistry;
+    public void setPath(String path) {
+        this.path = path;
     }
 }

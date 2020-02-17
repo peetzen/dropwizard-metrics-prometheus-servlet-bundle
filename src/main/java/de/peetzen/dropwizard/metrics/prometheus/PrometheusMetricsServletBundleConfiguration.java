@@ -2,5 +2,7 @@ package de.peetzen.dropwizard.metrics.prometheus;
 
 public interface PrometheusMetricsServletBundleConfiguration {
 
-    PrometheusMetricsServletConfiguration getPrometheusMetricsServletConfiguration();
+    default PrometheusMetricsServletConfiguration getPrometheusMetricsServletConfiguration() {
+        return new PrometheusMetricsServletConfiguration();
+    }
 }

@@ -30,4 +30,11 @@ public class PrometheusSimpleMappingSampleBuilderFactory extends PrometheusDynam
         return new PrometheusSimpleMappingSampleBuilder(mapperConfigs);
     }
 
+    public Map<String, String> getMappings() {
+        return mappings;
+    }
+
+    public void setMappings(Map<String, String> mappings) {
+        this.mappings = mappings;
+    }
 }

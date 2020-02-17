@@ -21,4 +21,11 @@ public abstract class PrometheusDynamicLabelSampleBuilderFactory implements Prom
 
     protected abstract SampleBuilder createSampleBuilder();
 
+    public boolean isExtractDynamicLabels() {
+        return extractDynamicLabels;
+    }
+
+    public void setExtractDynamicLabels(boolean extractDynamicLabels) {
+        this.extractDynamicLabels = extractDynamicLabels;
+    }
 }

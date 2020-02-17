@@ -32,6 +32,22 @@ public class PrometheusCustomMappingSampleBuilderFactory extends PrometheusDynam
 
         @JsonProperty
         private List<String> labels;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public List<String> getLabels() {
+            return labels;
+        }
+
+        public void setLabels(List<String> labels) {
+            this.labels = labels;
+        }
     }
 
     @Valid
@@ -45,6 +61,14 @@ public class PrometheusCustomMappingSampleBuilderFactory extends PrometheusDynam
             .map(e -> parseMapping(e.getKey(), e.getValue()))
             .collect(Collectors.toList());
         return new CustomMappingSampleBuilder(mapperConfigs);
+    }
+
+    public Map<String, JsonNode> getMappings() {
+        return mappings;
+    }
+
+    public void setMappings(Map<String, JsonNode> mappings) {
+        this.mappings = mappings;
     }
 
     private MapperConfig parseMapping(String key, JsonNode jsonNode) {
