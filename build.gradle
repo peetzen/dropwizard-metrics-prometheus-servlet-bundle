@@ -14,7 +14,7 @@ dependencies {
     implementation group: 'io.dropwizard', name: 'dropwizard-core', version: '1.0.0'
 
     // Prometheus libraries
-    implementation group: 'io.prometheus', name: 'simpleclient_dropwizard', version: '0.8.1'
+    implementation group: 'io.prometheus', name: 'simpleclient_dropwizard', version: '0.10.0'
     implementation group: 'io.prometheus', name: 'simpleclient_servlet', version: '0.8.1'
 
     // Spock for testing

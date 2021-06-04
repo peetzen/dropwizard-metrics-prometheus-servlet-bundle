@@ -100,6 +100,8 @@ Add a section to your applications configuration file to adjust the behaviour:
 ```yaml
 prometheusMetrics:
   path: /myMetrics
+  includes:
+    - "dropwizard.*"
   sampleBuilder:
     type: default
 ```
@@ -109,6 +111,10 @@ The key _prometheusMetrics_ depends on the _JsonProperty_ name in your _MyApplic
 
 #### path
 The URI path used to serv the prometheus metrics, default is _/prometheusMetrics_
+
+#### includes
+A list of regex expressions that will filter away metrics not matching the list. 
+**Default:** including all.
 
 #### sampleBuilder.type
 Currently there are three support _sampleBuilder.type_'s:
