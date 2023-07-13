@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
     // Dropwizard (compatible with newer versions)
-    implementation group: 'io.dropwizard', name: 'dropwizard-core', version: '1.0.0'
+    implementation group: 'io.dropwizard', name: 'dropwizard-core', version: '3.0.0'
 
     // Prometheus libraries
     implementation group: 'io.prometheus', name: 'simpleclient_dropwizard', version: '0.8.1'
