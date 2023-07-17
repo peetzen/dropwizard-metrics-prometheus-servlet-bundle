@@ -6,7 +6,7 @@
 [![Dropwizard](https://img.shields.io/badge/dropwizard-v1.x-green)](https://github.com/dropwizard/dropwizard)
 [![Dropwizard](https://img.shields.io/badge/dropwizard-v1.3.x-green)](https://github.com/dropwizard/dropwizard)
 [![Dropwizard](https://img.shields.io/badge/dropwizard-v2.x-green)](https://github.com/dropwizard/dropwizard)
-
+[![Dropwizard](https://img.shields.io/badge/dropwizard-v3.x-green)](https://github.com/dropwizard/dropwizard)
 
 Adds support for exposing Dropwizard metrics as Prometheus compatible metrics through a dedicated servlet.
 
@@ -30,16 +30,21 @@ For maven:
 <dependency>
   <groupId>de.peetzen.dropwizard</groupId>
   <artifactId>dropwizard-metrics-prometheus-servlet-bundle</artifactId>
-  <version>1.0.0</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
 For gradle:
 ```yaml
-implementation group: 'de.peetzen.dropwizard', name: 'dropwizard-metrics-prometheus-servlet-bundle', version: '1.0.0'
+implementation group: 'de.peetzen.dropwizard', name: 'dropwizard-metrics-prometheus-servlet-bundle', version: '3.0.0'
 ```
 
-Fully compatible with Dropwizard version `v1.x` as well as `v2.x`.
+Due to breaking changes between Dropwizard versions different versions of this library are provided:
+
+| Dropwizard Version | Library Version | Comment                        |
+|--------------------|-----------------|--------------------------------|
+| `v3.x`             | `3.0.0`         |                                |
+| `v1.x` & `v2.x`    | `1.0.0`         |                                |
 
 ### Required Changes
 Dropwizard makes it easy to extend its functionality with little work for the user.
