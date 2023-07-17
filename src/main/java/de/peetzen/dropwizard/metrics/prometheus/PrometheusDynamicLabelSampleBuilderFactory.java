@@ -3,8 +3,8 @@ package de.peetzen.dropwizard.metrics.prometheus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.prometheus.client.dropwizard.samplebuilder.SampleBuilder;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public abstract class PrometheusDynamicLabelSampleBuilderFactory implements PrometheusSampleBuilderFactory {
 

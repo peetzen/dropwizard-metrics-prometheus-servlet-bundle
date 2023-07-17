@@ -11,11 +11,11 @@ repositories {
 
 dependencies {
     // Dropwizard (compatible with newer versions)
-    implementation group: 'io.dropwizard', name: 'dropwizard-core', version: '3.0.0'
+    implementation group: 'io.dropwizard', name: 'dropwizard-core', version: '4.0.0'
 
     // Prometheus libraries
     implementation group: 'io.prometheus', name: 'simpleclient_dropwizard', version: '0.16.0'
-    implementation group: 'io.prometheus', name: 'simpleclient_servlet', version: '0.16.0'
+    implementation group: 'io.prometheus', name: 'simpleclient_servlet_jakarta', version: '0.16.0'
 
     // Spock for testing
     testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.4-M1-groovy-4.0'
