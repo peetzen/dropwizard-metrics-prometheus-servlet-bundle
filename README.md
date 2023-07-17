@@ -7,6 +7,7 @@
 [![Dropwizard](https://img.shields.io/badge/dropwizard-v1.3.x-green)](https://github.com/dropwizard/dropwizard)
 [![Dropwizard](https://img.shields.io/badge/dropwizard-v2.x-green)](https://github.com/dropwizard/dropwizard)
 [![Dropwizard](https://img.shields.io/badge/dropwizard-v3.x-green)](https://github.com/dropwizard/dropwizard)
+[![Dropwizard](https://img.shields.io/badge/dropwizard-v4.x-green)](https://github.com/dropwizard/dropwizard)
 
 Adds support for exposing Dropwizard metrics as Prometheus compatible metrics through a dedicated servlet.
 
