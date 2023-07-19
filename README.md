@@ -43,7 +43,7 @@ Due to breaking changes between Dropwizard versions different versions of this l
 
 | Dropwizard Version | Library Version | Comment                        |
 |--------------------|-----------------|--------------------------------|
-| `v3.x`             | `3.0.0`         |                                |
+| `v3.x`             | `3.0.1`         |                                |
 | `v1.x` & `v2.x`    | `1.0.0`         |                                |
 
 ### Required Changes

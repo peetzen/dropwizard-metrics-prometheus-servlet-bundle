@@ -9,6 +9,12 @@ repositories {
     mavenCentral()
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
 dependencies {
     // Dropwizard (compatible with newer versions)
     implementation group: 'io.dropwizard', name: 'dropwizard-core', version: '3.0.0'
