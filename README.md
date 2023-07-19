@@ -31,21 +31,21 @@ For maven:
 <dependency>
   <groupId>de.peetzen.dropwizard</groupId>
   <artifactId>dropwizard-metrics-prometheus-servlet-bundle</artifactId>
-  <version>4.0.0</version>
+  <version>4.0.1</version>
 </dependency>
 ```
 
 For gradle:
 ```yaml
-implementation group: 'de.peetzen.dropwizard', name: 'dropwizard-metrics-prometheus-servlet-bundle', version: '4.0.0'
+implementation group: 'de.peetzen.dropwizard', name: 'dropwizard-metrics-prometheus-servlet-bundle', version: '4.0.1'
 ```
 
 Due to breaking changes between Dropwizard versions different versions of this library are provided:
 
 | Dropwizard Version | Library Version | Comment                        |
 |--------------------|-----------------|--------------------------------|
-| `v4.x`             | `4.0.0`         | For latest Dropwizard version. |
-| `v3.x`             | `3.0.0`         |                                |
+| `v4.x`             | `4.0.1`         | For latest Dropwizard version. |
+| `v3.x`             | `3.0.1`         |                                |
 | `v1.x` & `v2.x`    | `1.0.0`         |                                |
 
 ### Required Changes
