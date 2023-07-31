@@ -1,20 +1,26 @@
 package de.peetzen.dropwizard.metrics.prometheus;
 
+import com.codahale.metrics.MetricFilter;
 import io.dropwizard.core.ConfiguredBundle;
-import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.servlet.jakarta.exporter.MetricsServlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 public class PrometheusMetricsServletBundle implements ConfiguredBundle<PrometheusMetricsServletBundleConfiguration> {
+    public static final String METRIC_FILTER = PrometheusMetricsServletBundle.class.getCanonicalName() + ".metricFilter";
+    public static final String DEFAULT_SERVLET_NAME = "prometheusMetrics";
+
     private static final Logger logger = LoggerFactory.getLogger(PrometheusMetricsServletBundle.class);
 
-    private static final String DEFAULT_SERVLET_NAME = "prometheusMetrics";
-
+    private final CollectorRegistry collectorRegistry = new CollectorRegistry(false);
     private final String servletName;
 
     public PrometheusMetricsServletBundle() {
@@ -26,20 +32,44 @@ public class PrometheusMetricsServletBundle implements ConfiguredBundle<Promethe
         this.servletName = servletName;
     }
 
-    @Override
-    public void run(PrometheusMetricsServletBundleConfiguration bundleConfig, Environment env) throws Exception {
-        PrometheusMetricsServletConfiguration config = bundleConfig.getPrometheusMetricsServletConfiguration();
-        CollectorRegistry collectorRegistry = config.createCollectorRegistry(env.metrics());
-        MetricsServlet servlet = new MetricsServlet(collectorRegistry);
-
-        logger.info("Registering MetricsServlet with name: {} for path {}", servletName, config.getPath());
-        env.admin() // use admin port
-            .addServlet(servletName, servlet)
-            .addMapping(config.getPath());
+    public String getServletName() {
+        return servletName;
     }
 
     @Override
-    public void initialize(Bootstrap<?> bootstrap) {
-        // do nothing. Definition required for Dropwizard 1.x
+    public void run(PrometheusMetricsServletBundleConfiguration bundleConfig, Environment env) {
+        var bundleServletConfig = bundleConfig.getPrometheusMetricsServletConfiguration();
+
+        logger.info("Registering MetricsServlet with name: {} for path {}", servletName, bundleServletConfig.getPath());
+        env.admin() // use admin port
+            .addServlet(servletName, new MetricsServlet(collectorRegistry) {
+                @Override
+                public void init(ServletConfig servletConfig) throws ServletException {
+                    // Allows programmatically setting ServletContext attributes
+                    // and e.g. provide a Metric Filter implementation in the Application#run(..) implementation.
+                    var metricFilter = (MetricFilter) servletConfig.getServletContext().getAttribute(METRIC_FILTER);
+                    var collector = bundleServletConfig.createDropwizardExports(env.metrics(), metricFilter);
+                    collectorRegistry.register(collector);
+
+                    super.init(servletConfig);
+                }
+            })
+            .addMapping(bundleServletConfig.getPath());
+    }
+
+    public static abstract class ContextListener implements ServletContextListener {
+
+        /**
+         * Returns the {@link MetricFilter} that shall be used to filter metrics.
+         *
+         * @return a metric filter instance
+         */
+        protected abstract MetricFilter getMetricFilter();
+
+        @Override
+        public void contextInitialized(ServletContextEvent event) {
+            var context = event.getServletContext();
+            context.setAttribute(METRIC_FILTER, getMetricFilter());
+        }
     }
 }
